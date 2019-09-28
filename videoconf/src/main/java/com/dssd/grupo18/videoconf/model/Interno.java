@@ -3,19 +3,11 @@ package com.dssd.grupo18.videoconf.model;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity(name = "interno_unidad")
-public class Interno {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Interno extends GenericModel {
 
     private String apellido;
 
@@ -27,14 +19,6 @@ public class Interno {
 
     @Column(name = "email_representante")
     private String emailRepresentante;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getApellido() {
         return apellido;

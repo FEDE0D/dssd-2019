@@ -3,21 +3,13 @@ package com.dssd.grupo18.videoconf.model;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.sql.Date;
 import java.sql.Time;
 
 @Entity(name = "videoconferencias")
-public class Videoconferencia {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Videoconferencia extends GenericModel {
 
     private Date fecha;
 
@@ -41,14 +33,6 @@ public class Videoconferencia {
     private String motivo;
 
     private Long solicitante;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Date getFecha() {
         return fecha;

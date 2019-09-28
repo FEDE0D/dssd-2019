@@ -5,16 +5,12 @@ import com.dssd.grupo18.videoconf.repository.UnidadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class UnidadService {
+public class UnidadService extends GenericService<Unidad, UnidadRepository> {
 
     @Autowired
-    private UnidadRepository repository;
-
-    public List<Unidad> list() {
-        return repository.findAll();
+    public UnidadService(UnidadRepository repository) {
+        super(repository);
     }
 
 }

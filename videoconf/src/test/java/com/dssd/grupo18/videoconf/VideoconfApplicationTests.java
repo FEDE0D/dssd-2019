@@ -2,10 +2,7 @@ package com.dssd.grupo18.videoconf;
 
 import com.dssd.grupo18.videoconf.model.Interno;
 import com.dssd.grupo18.videoconf.model.Unidad;
-import com.dssd.grupo18.videoconf.repository.InternoRepository;
-import com.dssd.grupo18.videoconf.repository.UnidadRepository;
-import com.dssd.grupo18.videoconf.service.UnidadService;
-import com.dssd.grupo18.videoconf.service.VideoconferenciaService;
+import com.dssd.grupo18.videoconf.service.InternoService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class VideoconfApplicationTests {
 
     @Autowired
-    private UnidadService unidadService;
-
-    @Autowired
-    private InternoRepository internoRepository;
-
-    @Autowired
-    private UnidadRepository unidadRepository;
-
-    @Autowired
-    private VideoconferenciaService videoconferenciaService;
+    private InternoService internoService;
 
     @Test
     public void contextLoads() {
@@ -43,7 +31,7 @@ public class VideoconfApplicationTests {
 
         interno.setUnidad(unidad);
 
-        this.internoRepository.save(interno);
+        this.internoService.save(interno);
         System.out.println(interno.getId());
     }
 

@@ -2,16 +2,9 @@ package com.dssd.grupo18.videoconf.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 @Entity(name = "unidades")
-public class Unidad {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Unidad extends GenericModel {
 
     private String nombre;
 
@@ -21,14 +14,6 @@ public class Unidad {
     private String coordenadas;
 
     private String email;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getNombre() {
         return nombre;

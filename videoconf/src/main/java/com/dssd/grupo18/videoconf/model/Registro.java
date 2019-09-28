@@ -2,20 +2,13 @@ package com.dssd.grupo18.videoconf.model;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import java.sql.Date;
 import java.sql.Time;
 
 @Entity
-public class Registro {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Registro extends GenericModel {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "estado")
@@ -30,14 +23,6 @@ public class Registro {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "videoconferencia")
     private Videoconferencia videoconferencia;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public EstadoVideoConferencia getEstado() {
         return estado;
