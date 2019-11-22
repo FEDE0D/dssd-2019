@@ -12,6 +12,7 @@ import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.platform.LoginException;
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.engine.session.impl.APISessionImpl;
 import org.bonitasoft.engine.util.APITypeManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -37,12 +38,6 @@ public class BonitaConfiguration {
 
     @Value("${bonita.user.password}")
     private String password;
-
-    @Value("${bonita.process.name}")
-    private String process;
-
-    @Value("${bonita.process.version}")
-    private String processVersion;
 
     @Bean
     public APISession getApiSession() throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, LoginException {
