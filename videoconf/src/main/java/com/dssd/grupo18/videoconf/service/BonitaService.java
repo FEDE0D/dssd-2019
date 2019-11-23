@@ -5,11 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.engine.api.ApiAccessType;
 import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.api.TenantAPIAccessor;
+import org.bonitasoft.engine.bpm.contract.ContractViolationException;
 import org.bonitasoft.engine.bpm.flownode.ActivityInstance;
 import org.bonitasoft.engine.bpm.flownode.ActivityInstanceNotFoundException;
+import org.bonitasoft.engine.bpm.flownode.FlowNodeExecutionException;
+import org.bonitasoft.engine.bpm.flownode.UserTaskNotFoundException;
 import org.bonitasoft.engine.bpm.process.ProcessActivationException;
 import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
 import org.bonitasoft.engine.bpm.process.ProcessExecutionException;
@@ -26,6 +30,7 @@ import org.bonitasoft.engine.identity.UserMembershipCriterion;
 import org.bonitasoft.engine.identity.UserNotFoundException;
 import org.bonitasoft.engine.platform.LoginException;
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.engine.session.impl.APISessionImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -47,6 +52,10 @@ public class BonitaService {
 
     @Value("${bonita.process.version}")
     private String processVersion;
+
+    public APISession login(String username, String password) throws BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, LoginException {
+        return TenantAPIAccessor.getLoginAPI().login(username, password);
+    }
 
     public ProcessInstance startProcess(long userId, long processDefinitionId) throws UserNotFoundException,
         ProcessDefinitionNotFoundException, ProcessExecutionException, ProcessActivationException {
@@ -73,10 +82,13 @@ public class BonitaService {
         this.processAPI.setActivityStateByName(taskId, "completed");
     }
 
-    public void setCaseVariable(long activityInstanceId, String name, String value) throws UpdateException {
-        Map<String, Serializable> values = new HashMap<>();
-        values.put(name, value);
-        this.processAPI.updateActivityInstanceVariables(activityInstanceId, values);
+    public void setActivityVariables(long activityInstanceId, Map<String, Serializable> variables) throws UpdateException {
+        this.processAPI.updateActivityInstanceVariables(activityInstanceId, variables);
+    }
+
+    public void setCaseVariable(long activityInstanceId, Map<String, Serializable> inputs)
+        throws UpdateException, FlowNodeExecutionException, ContractViolationException, UserTaskNotFoundException {
+        this.processAPI.executeUserTask(activityInstanceId, inputs);
     }
 
     public void getVariable(long caseId, String name) throws ContractDataNotFoundException {
@@ -99,4 +111,11 @@ public class BonitaService {
         return this.identityAPI.getCustomUserInfo(userId, 0, 10);
     }
 
+    public static Map<String, Serializable> converToInput(String path, Serializable value) {
+        Map<String, Serializable> root = new HashMap<>();
+        Map<String, Serializable> node = new HashMap<>();
+        node.put(path.split("\\.")[1], value);
+        root.put(path.split("\\.")[0], (Serializable) node);
+        return root;
+    }
 }
