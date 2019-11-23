@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dssd.grupo18.videoconf.model.Solicitud;
 import com.dssd.grupo18.videoconf.service.BonitaService;
 import com.dssd.grupo18.videoconf.service.SolicitudService;
 
@@ -47,7 +46,7 @@ public class BonitaController {
         ProcessExecutionException, FlowNodeExecutionException, ContractViolationException, UpdateException {
         APISession apiSession = this.bonitaService.login(username, password);
         request.getSession().setAttribute("bonita-session", apiSession);
-        request.getSession().setMaxInactiveInterval(10 *60);
+        request.getSession().setMaxInactiveInterval(10 * 60);
         response.sendRedirect("/forms/home");
     }
 
@@ -66,18 +65,20 @@ public class BonitaController {
     }
 
     @RequestMapping(value = "/solicitud", method = RequestMethod.POST)
-    public Solicitud solicitud(@RequestParam(value = "id", required = true) long activityInstanceId,
-        @RequestParam("nro_causa") long nroCausa, @RequestParam(value = "motivo") String motivo, @RequestParam(value = "unidad_id") long unidadId,
-        @RequestParam("fecha") String fecha, @RequestParam(value = "hora") String hora, @RequestParam("juez_id") long juezId,
+    public void solicitud(@RequestParam(value = "id", required = true) long activityInstanceId,
+        @RequestParam("nro_causa") long nroCausa, @RequestParam(value = "motivo") String motivo,
+        @RequestParam(value = "unidad_id") long unidadId, @RequestParam("fecha") String fecha,
+        @RequestParam(value = "hora") String hora, @RequestParam("juez_id") long juezId,
         @RequestParam(value = "interno_id") long internoId, @RequestParam("abogado_id") long abogadoId,
-        @RequestParam(value = "procurador_id") long procuradorId, HttpServletRequest request)
+        @RequestParam(value = "procurador_id") long procuradorId, HttpServletRequest request, HttpServletResponse response)
         throws UpdateException, FlowNodeExecutionException, ContractViolationException, UserTaskNotFoundException,
-        UserNotFoundException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+        UserNotFoundException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, IOException {
 
         APISession apiSession = (APISession) request.getSession().getAttribute("bonita-session");
 
-        return this.solicitudService.create(apiSession, activityInstanceId, nroCausa, motivo, unidadId, fecha,
-            hora, juezId, internoId, abogadoId, procuradorId);
+        this.solicitudService.create(apiSession, activityInstanceId, nroCausa, motivo, unidadId, fecha, hora, juezId,
+            internoId, abogadoId, procuradorId);
+        response.sendRedirect("/forms/home");
     }
 
 }
