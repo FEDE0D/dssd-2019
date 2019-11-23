@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<form method="POST" action="/bonita/solicitud?id=${processInstanceId}&token=${bonitaToken}">
+<form method="POST" action="/bonita/solicitud?id=${processInstanceId}">
   <div class="form-group">
     <label for="nro_causa">Causa</label>
     <div>
@@ -9,16 +9,6 @@
         <option value="1">Causa 1</option>
         <option value="2">Causa 2</option>
         <option value="3">Causa 3</option>
-      </select>
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="solicitante_id">Solicitante</label>
-    <div>
-      <select id="solicitante_id" name="solicitante_id" class="custom-select" required="required">
-        <option value="4">Mr Walter Bates</option>
-        <option value="201">Luis Melo</option>
-        <option value="101">Federico Pacheco</option>
       </select>
     </div>
   </div>
