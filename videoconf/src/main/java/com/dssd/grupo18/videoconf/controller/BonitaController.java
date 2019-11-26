@@ -1,6 +1,9 @@
 package com.dssd.grupo18.videoconf.controller;
 
+import java.io.IOException;
+
 import org.bonitasoft.engine.bpm.contract.ContractViolationException;
+import org.bonitasoft.engine.bpm.data.DataNotFoundException;
 import org.bonitasoft.engine.bpm.flownode.FlowNodeExecutionException;
 import org.bonitasoft.engine.bpm.flownode.UserTaskNotFoundException;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
@@ -38,6 +41,13 @@ public class BonitaController {
 
         this.solicitudService.create(solicitanteId, activityInstanceId, nroCausa, motivo, unidadId, fecha, hora, juezId,
             internoId, abogadoId, procuradorId);
+    }
+
+    @RequestMapping(value = "/schedule", method = RequestMethod.POST)
+    public void schedule(@RequestParam("id") long activityInstanceId, @RequestParam("schedule_id") long scheduleId)
+        throws ServerAPIException, BonitaHomeNotSetException, UnknownAPITypeException, UpdateException, IOException,
+        DataNotFoundException {
+        this.solicitudService.setSchedule(activityInstanceId, scheduleId);
     }
 
 }

@@ -5,10 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.api.TenantAPIAccessor;
 import org.bonitasoft.engine.bpm.contract.ContractViolationException;
+import org.bonitasoft.engine.bpm.data.DataNotFoundException;
 import org.bonitasoft.engine.bpm.flownode.ActivityInstance;
 import org.bonitasoft.engine.bpm.flownode.ActivityInstanceNotFoundException;
 import org.bonitasoft.engine.bpm.flownode.FlowNodeExecutionException;
@@ -102,8 +104,8 @@ public class BonitaService {
         this.processAPI.executeUserTask(activityInstanceId, inputs);
     }
 
-    public Serializable getVariable(long caseId, String name) throws ContractDataNotFoundException {
-        return this.processAPI.getUserTaskContractVariableValue(caseId, name);
+    public Serializable getActivityVariable(long activityInstanceId, String name) throws DataNotFoundException {
+        return this.processAPI.getActivityDataInstance(name, activityInstanceId);
     }
 
     public User getUser(long userId) throws UserNotFoundException {
