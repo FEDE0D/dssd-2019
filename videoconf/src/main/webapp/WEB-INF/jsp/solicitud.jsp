@@ -3,6 +3,15 @@
 
 <form method="POST" action="/bonita/solicitud?id=${processInstanceId}">
   <div class="form-group">
+      <label for="solicitante_id">Solicitante</label>
+      <div>
+        <select id="solicitante_id" name="solicitante_id" class="custom-select" required="required">
+          <option value="101">Federico Pacheco</option>
+          <option value="201">Luis Melo</option>
+        </select>
+      </div>
+    </div>
+  <div class="form-group">
     <label for="nro_causa">Causa</label>
     <div>
       <select id="nro_causa" name="nro_causa" class="custom-select" required="required">

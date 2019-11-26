@@ -92,19 +92,18 @@ public class BonitaService {
         this.processAPI.setActivityStateByName(taskId, "completed");
     }
 
-    public void setActivityVariables(APISession apiSession, long activityInstanceId, Map<String, Serializable> variables)
+    public void setActivityVariables(long activityInstanceId, Map<String, Serializable> variables)
         throws UpdateException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
-        TenantAPIAccessor.getProcessAPI(apiSession).updateActivityInstanceVariables(activityInstanceId, variables);
+        this.processAPI.updateActivityInstanceVariables(activityInstanceId, variables);
     }
 
-    public void setCaseVariable(APISession apiSession, long activityInstanceId, Map<String, Serializable> inputs)
-        throws UpdateException, FlowNodeExecutionException, ContractViolationException, UserTaskNotFoundException,
-        BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
-        TenantAPIAccessor.getProcessAPI(apiSession).executeUserTask(activityInstanceId, inputs);
+    public void setCaseVariable(long activityInstanceId, Map<String, Serializable> inputs)
+        throws FlowNodeExecutionException, ContractViolationException, UserTaskNotFoundException {
+        this.processAPI.executeUserTask(activityInstanceId, inputs);
     }
 
-    public void getVariable(long caseId, String name) throws ContractDataNotFoundException {
-        this.processAPI.getUserTaskContractVariableValue(caseId, name);
+    public Serializable getVariable(long caseId, String name) throws ContractDataNotFoundException {
+        return this.processAPI.getUserTaskContractVariableValue(caseId, name);
     }
 
     public User getUser(long userId) throws UserNotFoundException {
