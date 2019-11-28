@@ -1,9 +1,11 @@
 package com.dssd.videconf.service;
 
+import java.util.List;
+
+import org.springframework.data.domain.Example;
+
 import com.dssd.videconf.model.GenericModel;
 import com.dssd.videconf.repository.GenericRepository;
-
-import java.util.List;
 
 public abstract class GenericService<M extends GenericModel, R extends GenericRepository<M>> {
 
@@ -15,6 +17,10 @@ public abstract class GenericService<M extends GenericModel, R extends GenericRe
 
     public List<M> findAll() {
         return this.repository.findAll();
+    }
+
+    public List<M> findAll(Example<M> example) {
+        return this.repository.findAll(example);
     }
 
     public M getOne(Long id) {

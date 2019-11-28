@@ -33,10 +33,6 @@ public class Solicitud extends GenericModel {
     @JoinColumn(name = "procurador_id")
     private Participante procurador;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "solicitante_id")
-    private Participante solicitante;
-
     public Unidad getUnidad() {
         return unidad;
     }
@@ -93,11 +89,4 @@ public class Solicitud extends GenericModel {
         this.procurador = procurador;
     }
 
-    public Participante getSolicitante() {
-        return solicitante;
-    }
-
-    public void setSolicitante(Participante solicitante) {
-        this.solicitante = solicitante;
-    }
 }

@@ -34,6 +34,9 @@ public class FormsController {
     @RequestMapping("/solicitud")
     public String solicitud(@RequestParam(name = "id", required = false) String processInstanceId, Model model) {
         model.addAttribute("processInstanceId", processInstanceId);
+
+
+
         return "solicitud";
     }
 

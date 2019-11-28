@@ -1,15 +1,17 @@
 package com.dssd.videconf.service;
 
-import com.dssd.videconf.repository.UnidadRepository;
-import com.dssd.videconf.model.Unidad;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dssd.videconf.model.Unidad;
+import com.dssd.videconf.repository.GenericRepository;
+
 @Service
-public class UnidadService extends GenericService<Unidad, UnidadRepository> {
+public class UnidadService
+    extends GenericService<Unidad, GenericRepository<Unidad>> {
 
     @Autowired
-    public UnidadService(UnidadRepository repository) {
+    public UnidadService(GenericRepository<Unidad> repository) {
         super(repository);
     }
 

@@ -7,6 +7,13 @@ public class TipoParticipante extends GenericModel {
 
     private String tipo;
 
+    public TipoParticipante() {
+    }
+
+    public TipoParticipante(String tipo) {
+        this.tipo = tipo;
+    }
+
     public String getTipo() {
         return tipo;
     }
@@ -14,4 +21,5 @@ public class TipoParticipante extends GenericModel {
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
+
 }

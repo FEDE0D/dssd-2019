@@ -2,13 +2,12 @@ package com.dssd.videconf.service;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Date;
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.dssd.videconf.model.Interno;
-import com.dssd.videconf.model.Participante;
-import com.dssd.videconf.repository.GenericRepository;
 import org.bonitasoft.engine.bpm.contract.ContractViolationException;
 import org.bonitasoft.engine.bpm.data.DataNotFoundException;
 import org.bonitasoft.engine.bpm.data.impl.ShortTextDataInstanceImpl;
@@ -21,17 +20,22 @@ import org.bonitasoft.engine.exception.UpdateException;
 import org.bonitasoft.engine.identity.CustomUserInfo;
 import org.bonitasoft.engine.identity.UserMembership;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import com.dssd.videconf.model.Interno;
+import com.dssd.videconf.model.Participante;
 import com.dssd.videconf.model.Schedule;
 import com.dssd.videconf.model.ScheduleItem;
 import com.dssd.videconf.model.Solicitud;
-import com.dssd.videconf.repository.SolicitudRepository;
+import com.dssd.videconf.model.TipoParticipante;
+import com.dssd.videconf.model.Unidad;
+import com.dssd.videconf.repository.GenericRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class SolicitudService
-    extends GenericService<Solicitud, SolicitudRepository> {
+    extends GenericService<Solicitud, GenericRepository<Solicitud>> {
 
     @Autowired
     private BonitaService bonitaService;
@@ -43,8 +47,20 @@ public class SolicitudService
     private GenericRepository<Interno> internoGenericRepository;
 
     @Autowired
-    public SolicitudService(SolicitudRepository repository) {
+    private GenericRepository<Unidad> unidadGenericRepository;
+
+    @Autowired
+    private GenericRepository<TipoParticipante> tipoParticipanteGenericRepository;
+
+    @Autowired
+    public SolicitudService(GenericRepository<Solicitud> repository) {
         super(repository);
+    }
+
+    public List<Participante> getParticipanteByTipo(String tipo) {
+        Participante participante = new Participante();
+        participante.setTipo(new TipoParticipante(tipo));
+        return this.participanteGenericRepository.findAll(Example.of(participante));
     }
 
     /**
@@ -69,18 +85,29 @@ public class SolicitudService
         throws UpdateException, UserTaskNotFoundException, ContractViolationException, FlowNodeExecutionException,
         BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
 
+        // Load data from DB
         Participante juez = this.participanteGenericRepository.getOne(juezId);
         Participante abogado = this.participanteGenericRepository.getOne(abogadoId);
         Participante procurador = this.participanteGenericRepository.getOne(procuradorId);
-        Interno interno = this.i
+        Interno interno = this.internoGenericRepository.getOne(internoId);
+        Unidad unidad = this.unidadGenericRepository.getOne(unidadId);
 
+        // Persist new Solicitud
         Solicitud solicitud = new Solicitud();
+        solicitud.setUnidad(unidad);
+        solicitud.setProcurador(procurador);
+        solicitud.setJuez(juez);
+        solicitud.setInterno(interno);
+        solicitud.setHora(Time.valueOf(hora));
+        solicitud.setFecha(Date.valueOf(fecha));
+        solicitud.setAbogado(abogado);
+        this.save(solicitud);
 
-        solicitud.setId(88L);
-
+        // Get data from currency bonita solicitante
         List<UserMembership> userMemberships = this.bonitaService.getUserMembership(solicitanteId);
         List<CustomUserInfo> userInfo = this.bonitaService.getCustomUserData(solicitanteId);
 
+        // Store data on bonita and finish activity
         Map<String, Serializable> variables = new HashMap<>();
         variables.put("confirmacion", true);
         variables.put("resultadowscatedra", true);

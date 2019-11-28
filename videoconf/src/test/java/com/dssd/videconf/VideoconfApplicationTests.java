@@ -1,13 +1,11 @@
 package com.dssd.videconf;
 
-import com.dssd.videconf.model.Interno;
-import com.dssd.videconf.model.Participante;
-import com.dssd.videconf.model.Solicitud;
-import com.dssd.videconf.model.TipoParticipante;
-import com.dssd.videconf.model.Unidad;
+import java.sql.Date;
+import java.sql.Time;
+import java.time.LocalTime;
+import java.util.List;
+
 import com.dssd.videconf.repository.GenericRepository;
-import com.dssd.videconf.service.BonitaService;
-import com.dssd.videconf.service.SolicitudService;
 import org.bonitasoft.engine.bpm.flownode.ActivityInstance;
 import org.bonitasoft.engine.bpm.flownode.ActivityInstanceNotFoundException;
 import org.bonitasoft.engine.bpm.process.ProcessActivationException;
@@ -24,14 +22,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Example;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.sql.Date;
-import java.sql.Time;
-import java.time.Instant;
-import java.time.LocalTime;
-import java.util.Calendar;
-import java.util.List;
+import com.dssd.videconf.model.Interno;
+import com.dssd.videconf.model.Participante;
+import com.dssd.videconf.model.Solicitud;
+import com.dssd.videconf.model.TipoParticipante;
+import com.dssd.videconf.model.Unidad;
+import com.dssd.videconf.service.BonitaService;
+import com.dssd.videconf.service.SolicitudService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -42,6 +42,12 @@ public class VideoconfApplicationTests {
 
     @Autowired
     private SolicitudService solicitudService;
+
+    @Autowired
+    private GenericRepository<TipoParticipante> tipoParticipanteGenericRepository;
+
+    @Autowired
+    private GenericRepository<Participante> participanteGenericRepository;
 
     @Test
     public void userTest() throws UserNotFoundException {
@@ -56,7 +62,9 @@ public class VideoconfApplicationTests {
     }
 
     @Test
-    public void processTest() throws ActivityInstanceNotFoundException, UserNotFoundException, ProcessDefinitionNotFoundException, ProcessExecutionException, ProcessActivationException, UpdateException, InterruptedException {
+    public void processTest()
+        throws ActivityInstanceNotFoundException, UserNotFoundException, ProcessDefinitionNotFoundException,
+        ProcessExecutionException, ProcessActivationException, UpdateException, InterruptedException {
         User user = this.bonitaService.getUser("luis");
         long processDefinitionID = this.bonitaService.getSolicitudEntrevistaProcessID();
         ProcessInstance processInstance = this.bonitaService.startProcess(user.getId(), processDefinitionID);
@@ -104,12 +112,20 @@ public class VideoconfApplicationTests {
         solicitud.setInterno(interno);
         solicitud.setJuez(participante);
         solicitud.setProcurador(participante);
-        solicitud.setSolicitante(participante);
         solicitud.setUnidad(unidad);
 
         solicitud = this.solicitudService.save(solicitud);
 
         Assert.assertNotNull(solicitud.getId());
+    }
+
+    @Test
+    public void findByExampleTest() {
+        Participante example = new Participante();
+        example.setTipo(new TipoParticipante("juez"));
+
+        List<Participante> participantes = this.participanteGenericRepository.findAll(Example.of(example));
+        Assert.assertFalse(participantes.isEmpty());
     }
 
 }
